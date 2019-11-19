@@ -1,17 +1,20 @@
 #!/usr/bin/env python
 
 from elasticsearch import Elasticsearch
-from elasticsearch_dsl import Search, Q, A
+from elasticsearch_dsl import Search, Q
 import os
 
 # to connect without credentials
-# Use export ELK_IP="10.171.40.89"
+# define your ELK IP into an .env file -> ELK_IP=0.0.0.0
 
 if __name__ == '__main__':
+    # Connect to the elasticsearch
     es = Elasticsearch([os.getenv("ELK_IP")])
-    es.index(index="demo", body={"event": {"message": "Hello world!"}})
-
     print(es.info())
+
+    # Index event
+    es.index(index="demo", body={"event": {"message": "Hello world!"}})
+    es.indices.refresh(index="demo")
 
     # event.message turn into event__message <- double underscore
     request = Q("match_phrase", event__message="Hello world!")
@@ -23,6 +26,5 @@ if __name__ == '__main__':
 
     # Clean
     for hit in result.hits.hits:
-        #print(hit)
         # Remove entry by _id
         es.delete(index="demo", id=hit._id)
