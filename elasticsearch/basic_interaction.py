@@ -23,6 +23,7 @@ if __name__ == '__main__':
     # result contains elastic common json structure ... hits.hits => []
     result = search.execute()
     print(result.hits.hits)
+    print(result.hits.hits[0]._source.event.message)
 
     # Clean
     for hit in result.hits.hits:
