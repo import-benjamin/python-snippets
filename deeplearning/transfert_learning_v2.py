@@ -51,4 +51,4 @@ model.fit(train_generator,
           steps_per_epoch=train_generator.samples // batch_size,
           epochs=50)
 
-model.save('plankton_mind.h5')
+model.save('weights.h5')
