@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+
+"""
+This script require a unix shell with the following packages installed :
+	- git
+	- grep
+	- sort
+	- cut
+"""
+
 import subprocess
 from pprint import pprint
 from collections import Counter
@@ -27,7 +37,7 @@ def main():
 	authorship_percent = {key: global_stats[key]/tot_lines for key in global_stats}
 	
 	print(f"{' Current Authorship : ':=^80}")
-	[print(f"{key:<35} : {authorship_percent[key]*100:.02f}%") for key in authorship_percent]
+	print(*[f"{key:<35} : {authorship_percent[key]*100:.02f}%" for key in authorship_percent], sep='\n')
 	print(f"{' total : '+str(sum(authorship_percent.values())*100)+'% ':=^80}")
 
 	
