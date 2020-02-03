@@ -12,6 +12,7 @@ import subprocess
 from pprint import pprint
 from collections import Counter
 from concurrent import futures
+from fractions import Fraction
 
 
 def get_contributions_author_list(file: str, condition: str = "author-mail") -> tuple:
@@ -37,12 +38,10 @@ def main():
 	authorship_percent = {key: global_stats[key]/tot_lines for key in global_stats}
 	
 	print(f"{' Current Authorship : ':=^80}")
-	print(*[f"{key:<35} : {authorship_percent[key]*100:.02f}%" for key in authorship_percent], sep='\n')
-	print(f"{' total : '+str(sum(authorship_percent.values())*100)+'% ':=^80}")
+	print(*[f"{key:<35} : {round(float(authorship_percent[key])*100, 2)}%" for key in authorship_percent], sep='\n')
+	print(f"{' total : '+str(round(float(sum(authorship_percent.values())*100), 2))+'% ':=^80}")	
 
-	
-
-	while(sum(authorship_percent.values()) > 0.5):
+	while(sum(authorship_percent.values()) > Fraction(1, 2)):
 		author = max(authorship_percent, key=authorship_percent.get)
 		print(f"Critical author : {author}")
 		authorship_percent.pop(author)
