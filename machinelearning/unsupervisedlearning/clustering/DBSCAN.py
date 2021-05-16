@@ -22,7 +22,7 @@ import numpy as np
 from pandas import DataFrame
 
 from sklearn.preprocessing import StandardScaler
-
+from sklearn.decomposition import PCA
 # The DBSCAN algorithm views clusters as areas of high density separated by areas of low density. Due to this rather generic view, clusters found by DBSCAN can be any shape, as opposed to k-means which assumes that clusters are convex shaped. The central component to the DBSCAN is the concept of core samples, which are samples that are in areas of high density. A cluster is therefore a set of core samples, each close to each other (measured by some distance measure) and a set of non-core samples that are close to a core sample (but are not themselves core samples). There are two parameters to the algorithm, min_samples and eps, which define formally what we mean when we say dense. Higher min_samples or lower eps indicate higher density necessary to form a cluster.
 from sklearn.cluster import DBSCAN
 
@@ -64,17 +64,17 @@ log = logging.getLogger(__name__)
 console = Console()
 
 datasets = [
-    (make_blobs, {"n_samples": 600}),
-    (make_moons, {"n_samples": 600}),
-    (make_circles, {"n_samples": 600}),
+    (make_blobs, {"n_samples": 400, "centers": 2}),
+    (make_moons, {"n_samples": 400}),
+    (make_circles, {"n_samples": 400}),
 ]
 
 algorithms = [
     (DBSCAN, {"eps": 0.3, "min_samples": 10, "n_jobs": -1}),
-    (OPTICS, {"eps": 0.3, "min_samples": 10, "n_jobs": -1}),
-    (KMeans, {"n_clusters": 3}),
-    (Birch, {}),
-    (SpectralClustering, {"n_clusters": 3}),
+    (OPTICS, {"n_jobs": -1}),
+    (KMeans, {"n_clusters": 2}),
+    (Birch, {"n_clusters": 2}),
+    (SpectralClustering, {"n_clusters": 2}),
 ]
 
 metrics = [
@@ -92,10 +92,10 @@ tables_resume = []
 
 with console.status("[bold green]Fit model...") as status:
 
-    fig, axes = plt.subplots(datasets_len, algorithms_len + 1)
+    fig, axes = plt.subplots(datasets_len, algorithms_len + 1, figsize=(12, 12))
     fig.suptitle("Clustering comparison")
 
-    standard_scaler = StandardScaler()
+    standard_scaler = PCA()
 
     for d_index, (d_func, d_args) in enumerate(datasets):
         log.info(f"{d_index+1}/{datasets_len} Generaring {d_func.__name__} dataset")
@@ -108,15 +108,18 @@ with console.status("[bold green]Fit model...") as status:
         dataset = standard_scaler.fit_transform(data)
         dataframe = DataFrame(dataset, columns=["x", "y"])
 
+
+        # axes[d_index][-1].scatter(data[:,0], data[:,0], label = "initial")
         plot = axes[d_index][-1].scatter(
             dataframe["x"], dataframe["y"], c=labels, cmap="tab20c"
         )
         axes[d_index][-1].set_title("dataset")
-        axes[d_index][-1].legend(*plot.legend_elements())
+        axes[d_index][-1].legend(*plot.legend_elements(), fancybox=True)
 
         log.info(f"Start comparing clustering algorithmes")
 
         for a_index, (algorithm, arguments) in enumerate(algorithms):
+            log.info(f"{d_index+1}/{datasets_len} - {a_index+1}/{algorithms_len} {algorithm.__name__.title()}")
             clustering = algorithm(**arguments)
             label_preds = clustering.fit_predict(dataset)
 
@@ -127,8 +130,6 @@ with console.status("[bold green]Fit model...") as status:
 
             metrics_result = [str(func(labels, label_preds)) for func in metrics]
             dataset_resume.add_row(algorithm.__name__, *metrics_result)
-
-            log.info(f"{algorithm.__name__} is done")
 
             axes[d_index][a_index].set_title(f"{algorithm.__name__}")
 
