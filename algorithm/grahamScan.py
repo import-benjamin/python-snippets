@@ -20,9 +20,9 @@ angle requires trigonometric calculations.
 
 
 def convex_hull_graham_scan(points):
-    '''
+    """
     Adapted from Tom Switzer
-    '''
+    """
     from functools import reduce
 
     TURN_LEFT, TURN_RIGHT, TURN_NONE = 1, -1, 0
@@ -31,7 +31,9 @@ def convex_hull_graham_scan(points):
         return (a > b) - (a < b)
 
     def turn(p, q, r):
-        vectorial_product = (q[0] - p[0]) * (r[1] - p[1]) - (r[0] - p[0]) * (q[1] - p[1])
+        vectorial_product = (q[0] - p[0]) * (r[1] - p[1]) - (r[0] - p[0]) * (
+            q[1] - p[1]
+        )
         return cmp(vectorial_product, 0)
 
     def _keep_left(hull, r):
@@ -47,19 +49,22 @@ def convex_hull_graham_scan(points):
     return l.extend(u[i] for i in range(1, len(u) - 1)) or l
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import matplotlib.pyplot as plt
-    hull = [[2, 4],
-            [3, 5],
-            [3, 3],
-            [4, 6],
-            [4, 4],
-            [4, 2],
-            [5, 5],
-            [5, 3],
-            [6, 4],
-            [6, 6],
-            [-2, 3]]
+
+    hull = [
+        [2, 4],
+        [3, 5],
+        [3, 3],
+        [4, 6],
+        [4, 4],
+        [4, 2],
+        [5, 5],
+        [5, 3],
+        [6, 4],
+        [6, 6],
+        [-2, 3],
+    ]
 
     x = [_x[0] for _x in hull]
     y = [_y[1] for _y in hull]

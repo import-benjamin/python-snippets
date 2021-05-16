@@ -29,7 +29,10 @@ print(f"iris_dataset sample : \n{iris_dataset['data'][:5]}")
 # train_test_split extract 75% of the dataset to train our model and keep the remaining 25% for test.
 
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(iris_dataset['data'], iris_dataset['target'], random_state=0)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    iris_dataset["data"], iris_dataset["target"], random_state=0
+)
 
 print(f"X_train shape : {X_train.shape}")
 print(f"y_train shape : {y_train.shape}")
@@ -37,8 +40,18 @@ print(f"X_test shape : {X_test.shape}")
 print(f"y_test shape : {y_test.shape}")
 
 import matplotlib.pyplot as plt
+
 iris_dataframe = pd.DataFrame(X_train, columns=iris_dataset.feature_names)
-pd.plotting.scatter_matrix(iris_dataframe, c=y_train, figsize=(15, 15), marker='o', hist_kwds={"bins":20}, s=60, alpha=.8, cmap=mglearn.cm3)
+pd.plotting.scatter_matrix(
+    iris_dataframe,
+    c=y_train,
+    figsize=(15, 15),
+    marker="o",
+    hist_kwds={"bins": 20},
+    s=60,
+    alpha=0.8,
+    cmap=mglearn.cm3,
+)
 plt.show()
 
 from sklearn.neighbors import KNeighborsClassifier

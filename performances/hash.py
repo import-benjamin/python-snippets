@@ -1,8 +1,10 @@
 import hashlib
 from timeit import timeit
 
+
 def hash_pbkdf2_hmac():
-  return hashlib.pbkdf2_hmac('sha256', b'password', b'salt', 100000).hex()
+    return hashlib.pbkdf2_hmac("sha256", b"password", b"salt", 100000).hex()
+
 
 timeit("hash_pbkdf2_hmac()", setup="from __main__ import hash_pbkdf2_hmac", number=1000)
 # 108.355244036
@@ -10,7 +12,8 @@ timeit("hash_pbkdf2_hmac()", setup="from __main__ import hash_pbkdf2_hmac", numb
 
 
 def hash_sha256():
-  return hashlib.sha224(b"sha256").hexdigest()
+    return hashlib.sha224(b"sha256").hexdigest()
+
 
 timeit("hash_sha256()", setup="from __main__ import hash_sha256", number=1000)
 # 0.0014648869999973613

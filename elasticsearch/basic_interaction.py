@@ -7,7 +7,7 @@ import os
 # to connect without credentials
 # define your ELK IP into an .env file -> ELK_IP=0.0.0.0
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Connect to the elasticsearch
     es = Elasticsearch([os.getenv("ELK_IP")])
     print(es.info())
