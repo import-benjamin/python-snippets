@@ -23,6 +23,7 @@ from pandas import DataFrame
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
+
 # The DBSCAN algorithm views clusters as areas of high density separated by areas of low density. Due to this rather generic view, clusters found by DBSCAN can be any shape, as opposed to k-means which assumes that clusters are convex shaped. The central component to the DBSCAN is the concept of core samples, which are samples that are in areas of high density. A cluster is therefore a set of core samples, each close to each other (measured by some distance measure) and a set of non-core samples that are close to a core sample (but are not themselves core samples). There are two parameters to the algorithm, min_samples and eps, which define formally what we mean when we say dense. Higher min_samples or lower eps indicate higher density necessary to form a cluster.
 from sklearn.cluster import DBSCAN
 
@@ -108,7 +109,6 @@ with console.status("[bold green]Fit model...") as status:
         dataset = standard_scaler.fit_transform(data)
         dataframe = DataFrame(dataset, columns=["x", "y"])
 
-
         # axes[d_index][-1].scatter(data[:,0], data[:,0], label = "initial")
         plot = axes[d_index][-1].scatter(
             dataframe["x"], dataframe["y"], c=labels, cmap="tab20c"
@@ -119,7 +119,9 @@ with console.status("[bold green]Fit model...") as status:
         log.info(f"Start comparing clustering algorithmes")
 
         for a_index, (algorithm, arguments) in enumerate(algorithms):
-            log.info(f"{d_index+1}/{datasets_len} - {a_index+1}/{algorithms_len} {algorithm.__name__.title()}")
+            log.info(
+                f"{d_index+1}/{datasets_len} - {a_index+1}/{algorithms_len} {algorithm.__name__.title()}"
+            )
             clustering = algorithm(**arguments)
             label_preds = clustering.fit_predict(dataset)
 
